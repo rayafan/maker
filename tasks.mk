@@ -21,7 +21,10 @@ rm:
 ps:
 	$(DOCKERCLI) stack ps $(DOCKER_STACK)
 
-DIRS := $(shell cat properties.mk |grep _SRC= | sed "s/=.*//" | sed "s/^/$$/")
+DIRS := $(shell if [ -a properties.mk ] ; \
+	then \
+		cat properties.mk |grep _SRC= | sed "s/=.*//" | sed "s/^/$$/" ; \
+	fi;)
 
 volumes:
 
