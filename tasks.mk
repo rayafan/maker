@@ -36,3 +36,5 @@ endif
 clean:
 	@rm -rf docker-compose.yml
 
+maker:
+	git -C maker pull
