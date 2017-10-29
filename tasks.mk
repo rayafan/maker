@@ -40,4 +40,4 @@ clean:
 	@rm -rf docker-compose.yml
 
 maker-upgrade:
-	git -C maker pull
+	git -C maker pull origin master
