@@ -1,4 +1,4 @@
-include project/helpers.mk
+include maker/helpers.mk
 
 version:
 	@echo `$(call git_version)`
