@@ -1,4 +1,4 @@
-include maker/helpers.mk
+include gitmodules/github.com/rayafan/maker/helpers.mk
 
 version:
 	@echo `$(call git_version)`
