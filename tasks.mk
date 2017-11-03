@@ -40,4 +40,5 @@ clean:
 	@rm -rf docker-compose.yml
 
 submodule-update:
+	git submodule sync --recursive
 	git submodule update --remote --merge --recursive
