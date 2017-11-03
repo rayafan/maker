@@ -1,4 +1,4 @@
-include gitmodules/github.com/rayafan/maker/helpers.mk
+-include gitmodules/github.com/rayafan/maker/helpers.mk
 
 version:
 	@echo `$(call git_version)`
@@ -39,5 +39,5 @@ endif
 clean:
 	@rm -rf docker-compose.yml
 
-maker-upgrade:
-	git -C maker pull origin master
+submodule-update:
+	git submodule update --remote --merge --recursive
