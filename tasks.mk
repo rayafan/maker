@@ -61,7 +61,7 @@ ansible.yml:
 		cp gitmodules/github.com/rayafan/maker/template/simple/ansible.yml ansible.yml ; \
 	fi;)
 
-nginx/nginx.example.conf:
+nginx.example.conf:
 	@mkdir nginx
 	$(shell if [ -a gitmodules/github.com/rayafan/maker/template/simple/nginx.example.conf ] ; \
 	then \
@@ -89,3 +89,17 @@ playbook:
 	ansible-playbook -i gitmodules/gitlab.com/rayafan/inventory/hosts ansible.yml
 
 deploy: playbook up
+
+
+help:
+	@echo "make init"
+	@echo "make deinit"
+	@echo "make template"
+	@echo "make deploy"
+	@echo "make up"
+	@echo "make ls"
+	@echo "make rm"
+	@echo "make du"
+	@echo "make environment"
+	@echo "make revision"
+	@echo "make version"
