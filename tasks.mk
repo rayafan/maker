@@ -103,3 +103,5 @@ help:
 	@echo "make environment"
 	@echo "make revision"
 	@echo "make version"
+	@echo "make pull"
+	@echo "make build"
