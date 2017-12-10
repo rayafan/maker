@@ -27,7 +27,6 @@ DIRS := $(shell if [ -a properties.mk ] ; \
 	fi;)
 
 volumes:
-
 	$(SSHCLI) mkdir -p $(DIRS)
 
 network.name:
@@ -62,7 +61,7 @@ ansible.yml:
 	fi;)
 
 nginx.example.conf:
-	@mkdir nginx
+	ls nginx || mkdir nginx
 	$(shell if [ -a gitmodules/github.com/rayafan/maker/template/simple/nginx.example.conf ] ; \
 	then \
 		cp gitmodules/github.com/rayafan/maker/template/simple/nginx.example.conf nginx/nginx.example.conf ; \
@@ -89,7 +88,6 @@ playbook:
 	ansible-playbook -i gitmodules/gitlab.com/rayafan/inventory/hosts ansible.yml
 
 deploy: playbook up
-
 
 help:
 	@echo "make init"
