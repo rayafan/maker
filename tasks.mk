@@ -42,3 +42,37 @@ clean:
 submodule-update:
 	git submodule sync --recursive
 	git submodule update --remote --merge --recursive
+
+properties.mk:
+	$(shell if [ -a gitmodules/github.com/rayafan/maker/template/simple/properties.mk ] ; \
+	then \
+		cp gitmodules/github.com/rayafan/maker/template/simple/properties.mk properties.mk ; \
+	fi;)
+
+.gitlab-ci.yml:
+	$(shell if [ -a gitmodules/github.com/rayafan/maker/template/simple/.gitlab-ci.yml ] ; \
+	then \
+		cp gitmodules/github.com/rayafan/maker/template/simple/.gitlab-ci.yml .gitlab-ci.yml ; \
+	fi;)
+
+ansible.yml:
+	$(shell if [ -a gitmodules/github.com/rayafan/maker/template/simple/ansible.yml ] ; \
+	then \
+		cp gitmodules/github.com/rayafan/maker/template/simple/ansible.yml ansible.yml ; \
+	fi;)
+
+nginx/nginx.example.conf:
+	@mkdir nginx
+	$(shell if [ -a gitmodules/github.com/rayafan/maker/template/simple/nginx.example.conf ] ; \
+	then \
+		cp gitmodules/github.com/rayafan/maker/template/simple/nginx.example.conf nginx/nginx.example.conf ; \
+	fi;)
+
+du:
+	@${SSHCLI} du -sh ${STACK_VOLUME_PREFIX}
+	@${SSHCLI} du -sh $(DIRS)
+
+playbook:
+	ansible-playbook -i gitmodules/gitlab.com/rayafan/inventory/hosts ansible.yml
+
+deploy: playbook up

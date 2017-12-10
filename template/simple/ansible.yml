@@ -1,0 +1,31 @@
+- hosts: "{{lookup('env', 'DEPLOY_NODE_GROUP')}}"
+  tasks:
+    - name: Creates stack subvolume
+      shell: btrfs subvolume list {{lookup('env', 'DOCKER_VOLUME_PREFIX')}} || btrfs subvolume create {{lookup('env', 'DOCKER_VOLUME_PREFIX')}} || mkdir -p {{lookup('env', 'DOCKER_VOLUME_PREFIX')}}
+      become: true
+
+    - name: Creates stack subvolume
+      shell: btrfs subvolume list {{lookup('env', 'STACK_VOLUME_PREFIX')}} || btrfs subvolume create {{lookup('env', 'STACK_VOLUME_PREFIX')}} || mkdir -p {{lookup('env', 'STACK_VOLUME_PREFIX')}}
+      become: true
+
+    - name: Creates nginx path
+      file:
+        path: "{{lookup('env', 'NGINX_CONFIG_DIR')}}"
+        state: directory
+        owner: root
+        group: root
+        recurse: yes
+      become: true
+
+    - name: Deploy to nginx
+      synchronize:
+        src: nginx/
+        dest: "{{lookup('env', 'NGINX_CONFIG_DIR')}}"
+      become: true
+
+    - name: Creates nginx path
+      file:
+        path: "{{lookup('env', 'MYSQL_VOLUME_SRC')}}"
+        state: directory
+        recurse: yes
+      become: true

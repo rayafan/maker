@@ -1,0 +1,75 @@
+image: docker:git
+
+services:
+  - docker:dind
+
+stages:
+  - build
+  - test
+  - release
+  - deploy
+  - smoke
+
+variables:
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH:$CI_BUILD_REF_NAME
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH:latest
+  DOCKER_DRIVER: overlay
+  DOCKER_STACK: rayafan_prod
+  GIT_SUBMODULE_STRATEGY: none
+  DOCKER_VOLUME_PREFIX: /mnt/volumes
+
+cache:
+  paths:
+    - ~/.cache/pip/
+
+before_script:
+  - docker info
+  - apk update && apk add openssh-client curl curl-dev py-pip make bash ansible rsync
+  - pip install docker-compose envtpl
+  - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+  - eval `ssh-agent -s`
+  - printf '%s\n' "$SSH_PRIVATE_KEY" | ssh-add -
+  - mkdir -p ~/.ssh
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  - make pull
+  - export GIT_VERSION=$(make revision)
+  - export SEMANTIC_VERSION_TAG=$(make version)
+  - export SEMANTIC_VERSION_IMAGE=$CI_REGISTRY/$CI_PROJECT_PATH:$SEMANTIC_VERSION_TAG
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+
+
+test:
+  stage: test
+  variables:
+    DJANGO_SETTINGS_MODULE: po.settings.ci
+  script:
+    - echo "echo testing"
+
+build:
+  stage: build
+  script:
+    - make push
+
+release:
+  stage: release
+  script:
+    - make release
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - docker-compose.yml
+  only:
+    - master
+
+deploy_staging:
+  stage: deploy
+  variables:
+    DOCKER_STACK: monitor_staging
+    DEPLOY_HOST_PORT: logs.rayafan.com
+  script:
+    - make deploy
+  environment:
+    name: staging
+    url: http://varizak.rasanak.com
+  only:
+    - master
