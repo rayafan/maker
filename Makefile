@@ -33,7 +33,7 @@ up: volumes build
 	${DOCKERCLI} stack services ${DOCKER_STACK}
 
 gitmodules-maker:
-	git submodule add --force /home/hmd/src/github.com/rayafan/maker gitmodules/github.com/rayafan/maker
+	git submodule add --force https://github.com/rayafan/maker.git gitmodules/github.com/rayafan/maker
 
 gitmodules-inventory:
 	git submodule add --force git@gitlab.com:rayafan/inventory.git gitmodules/gitlab.com/rayafan/inventory
