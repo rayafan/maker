@@ -1,0 +1,78 @@
+version: '3'
+services:
+  {{CI_PROJECT_NAME}}:
+    image: {{SEMANTIC_VERSION_IMAGE}}
+    environment:
+      - VERSION={{SEMANTIC_VERSION_TAG}}
+      - GIT_COMMIT_SHA={{CI_COMMIT_SHA}}
+      - GIT_BRANCH={{CI_COMMIT_REF_NAME}}
+      - GIT_REPOSITORY={{CI_PROJECT_URL}}
+      - DJANGO_SETTINGS_MODULE=po.settings.ci
+
+    deploy:
+      resources:
+        limits:
+          memory: {{MEMORY_LIMIT}}
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://logs.rayafan.com:12201"
+        tag: "{{DOCKER_STACK}}_{{CI_PROJECT_NAME}}"
+
+  memcached:
+    image: memcached
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+    ports:
+      - "11211:11211"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://logs.rayafan.com:12201"
+        tag: "{{DOCKER_STACK}}_memcached"
+
+  mysql:
+    image: mysql:{{MYSQL_VERSION}}
+    ports:
+      - "3306:3306"
+
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    volumes:
+      - {{MYSQL_VOLUME_SRC}}:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://logs.rayafan.com:12201"
+        tag: "{{DOCKER_STACK}}_mysql"
+
+  phpmyadmin-varizak:
+    image: phpmyadmin/phpmyadmin:4.7.5-1
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    environment:
+      - PMA_HOST=mysql
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://logs.rayafan.com:12201"
+        tag: "{{DOCKER_STACK}}_{{CI_PROJECT_NAME}}_phpmyadmin"
+
+networks:
+  {{NETWORK_NAME}}:
+    driver: overlay

@@ -68,6 +68,19 @@ nginx/nginx.example.conf:
 		cp gitmodules/github.com/rayafan/maker/template/simple/nginx.example.conf nginx/nginx.example.conf ; \
 	fi;)
 
+
+docker-compose.test.yml:
+	$(shell if [ -a gitmodules/github.com/rayafan/maker/template/simple/docker-compose.test.yml ] ; \
+	then \
+		cp gitmodules/github.com/rayafan/maker/template/simple/docker-compose.test.yml docker-compose.test.yml ; \
+	fi;)
+
+docker-compose.tpl.yml:
+	$(shell if [ -a gitmodules/github.com/rayafan/maker/template/simple/docker-compose.tpl.yml ] ; \
+	then \
+		cp gitmodules/github.com/rayafan/maker/template/simple/docker-compose.tpl.yml docker-compose.tpl.yml ; \
+	fi;)
+
 du:
 	@${SSHCLI} du -sh ${STACK_VOLUME_PREFIX}
 	@${SSHCLI} du -sh $(DIRS)

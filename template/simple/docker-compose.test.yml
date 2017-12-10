@@ -1,0 +1,43 @@
+version: '3'
+services:
+  api:
+    build: .
+    command: bash -c "./wait-for-it/wait-for-it.sh mysql:3306 -t 40 -- python3 manage.py migrate && python3 manage.py test"
+    environment:
+      - VERSION=1.0.0
+      - GIT_COMMIT_SHA=e3421b78dcdda9b0297ff582c2d3c39d31f031d1
+      - GIT_BRANCH=master
+      - GIT_REPOSITORY=/home/hmd/src/gitlab.com/ghasemz/po
+      - DJANGO_SETTINGS_MODULE=po.settings.ci
+    depends_on:
+      - mysql
+      - memcached
+    networks:
+      - apinet
+
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  mysql:
+    image: mysql:5.7.9
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - apinet
+
+  memcached:
+    image: memcached
+    networks:
+      - apinet
+
+networks:
+  apinet:
