@@ -1,4 +1,4 @@
-# gitmodules
+# Introduction
 Maker allows Gnu Make to streamline development of dockerized apps
 
 Always you have some codes to be run as part of deployment procedure. The best way is to abstract this to have the same way to setup your application in the local machine or in the ci or for staging and prod. The only things that is already available for all environments is bash.
@@ -16,5 +16,12 @@ So you should have a solution to
 3. Being able to run the tool everywhere even in production or in the CI that you have access to limited set of tools
 4. Be able to manage the package and receive upgrades
 
-
 Maker is a git module uses shell
+
+#Getting started
+```bash
+git tag 1.0.0 #latest version 
+curl https://raw.githubusercontent.com/rayafan/maker/master/Makefile > Makefile
+make init
+make template # to get access to initial boilerplate for deployment
+```
