@@ -25,7 +25,7 @@
 
     - name: Creates nginx path
       file:
-        path: "{{lookup('env', 'MYSQL_VOLUME_SRC')}}"
+        path: "{{lookup('env', 'DB_VOLUME_SRC')}}"
         state: directory
         recurse: yes
       become: true
