@@ -27,7 +27,7 @@ DIRS := $(shell if [ -a properties.mk ] ; \
 	fi;)
 
 volumes:
-	$(SSHCLI) mkdir -p $(DIRS)
+	@echo "SRC directories is assumed being creaated by ansible"
 
 network.name:
 ifndef NETWORK_NAME
