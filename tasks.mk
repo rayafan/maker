@@ -88,6 +88,7 @@ playbook:
 	ansible-playbook -i gitmodules/gitlab.com/rayafan/inventory/hosts ansible.yml
 
 deploy: playbook up
+	${DOCKERCLI} service update ${DOCKER_STACK}_${CI_PROJECT_NAME} --force
 
 help:
 	@echo "make init"
